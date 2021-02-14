@@ -79,35 +79,38 @@
    ([M-down-mouse-3] . 'mouse-set-point)
    ([M-mouse-3] . 'my-smart-copy)))
 
-(defun my-find-heading (heading)
+(defun my-org-find-heading (heading)
   (re-search-forward (concat "^" heading "$") nil t))
 
-(defun my-find-or-create-heading (heading)
+(defun my-org-find-or-create-heading (heading)
   (progn
     (goto-char (point-min))
-    (when (not (my-find-heading heading))
+    (when (not (my-org-find-heading heading))
       (goto-char (point-max))
       (open-line 1)
       (insert heading))))
 
-(defun my-find-or-create-inbox-heading ()
-  (my-find-or-create-heading (format-time-string "* %Y, Week %V")))
+(defun my-org-find-or-create-inbox-heading ()
+  (my-org-find-or-create-heading (format-time-string "* %Y W%V")))
+
+(defun my-org-find-inbox-file ()
+  (let ((filename (cond ((eq my-org-agenda-mode 'personal) "personal_inbox")
+                        ((eq my-org-agenda-mode 'work) "work_inbox"))))
+    (set-buffer (org-capture-target-buffer (my-org-journal-file-path filename)))))
+
+(defun my-org-inbox-capture ()
+  (progn
+    (my-org-find-inbox-file)
+    (my-org-find-or-create-inbox-heading)))
 
 (customize-set-variable 'org-capture-templates
   `(("j" "Journal")
     ("jt" "Todo" entry
-     (file+function ,(my-org-journal-file-path "personal-inbox") my-find-or-create-inbox-heading)
-     (file "~/config-emacs/capture-templates/todo.txt"))
+     (function my-org-inbox-capture)
+     (file "~/emacs_config/capture-templates/todo.txt"))
     ("jn" "Note" entry
-     (file+function ,(my-org-journal-file-path "personal-inbox") my-find-or-create-inbox-heading)
-     (file "~/config-emacs/capture-templates/note.txt"))
-    ("w" "Work journal")
-    ("wt" "Todo" entry
-     (file+function ,(my-org-journal-file-path "work-inbox") my-find-or-create-inbox-heading)
-     (file "~/config-emacs/capture-templates/todo.txt"))
-    ("wn" "Note" entry
-     (file+function ,(my-org-journal-file-path "work-inbox") my-find-or-create-inbox-heading)
-     (file "~/config-emacs/capture-templates/note.txt"))))
+     (function my-org-inbox-capture)
+     (file "~/emacs_config/capture-templates/note.txt"))))
 
 (setq org-super-agenda-groups
       '((:name "Schedule"
