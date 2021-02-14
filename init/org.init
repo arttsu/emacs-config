@@ -1,49 +1,32 @@
 (straight-use-package 'org-plus-contrib)
 
-(setq my-journal-path "~/journal/")
+(setq MY-ORG-JOURNAL-PATH "~/journal")
+(setq MY-ORG-PERSONAL-AGENDA-FILES '("personal_inbox" "personal_projects"))
+(setq MY-ORG-WORK-AGENDA-FILES '("work_inbox" "work_projects"))
 
-(defun my-journal-path (path)
-  (concat my-journal-path path ".org"))
+(defun my-org-journal-file-path (filename)
+  (concat MY-ORG-JOURNAL-PATH "/" filename ".org"))
 
-(defun my-project-files ()
-  (let ((projects-path (concat my-journal-path "projects/")))
-    (mapcar (lambda (f) (concat projects-path f))
-            (directory-files projects-path nil "\.org$")))) 
+(defun my-org-personal-agenda-files ()
+  (mapcar 'my-org-journal-file-path MY-ORG-PERSONAL-AGENDA-FILES))
 
-(defun my-personal-agenda-files ()
-  (append `(,(my-journal-path "personal-inbox")) (my-project-files)))
+(defun my-org-work-agenda-files ()
+  (mapcar 'my-org-journal-file-path MY-ORG-WORK-AGENDA-FILES))
 
-(defun my-ticket-files ()
-  (let ((tickets-path (concat my-journal-path "tickets/")))
-    (mapcar (lambda (f) (concat tickets-path f))
-            (directory-files tickets-path nil "\.org$")))) 
+(defun my-org-agenda-files (mode)
+  (cond ((eq mode 'personal) (my-org-personal-agenda-files))
+        ((eq mode 'work) (my-org-work-agenda-files))))
 
-(defun my-initiative-files ()
-  (let ((initiatives-path (concat my-journal-path "initiatives/")))
-    (mapcar (lambda (f) (concat initiatives-path f))
-            (directory-files initiatives-path nil "\.org$"))))
-
-(defun my-work-agenda-files ()
-  (append
-   `(,(my-journal-path "work-inbox"))
-   `(,(my-journal-path "operational-data-tracking-tickets"))
-   (my-ticket-files)
-   (my-initiative-files)))
-
-(defun my-agenda-files (mode)
-  (cond ((eq mode 'personal) (my-personal-agenda-files))
-        ((eq mode 'work) (my-work-agenda-files))))
-
-(defun my-set-agenda-mode (mode)
+(defun my-org-set-agenda-mode (mode)
   (progn
-    (setq my-agenda-mode mode)
-    (customize-set-variable 'org-agenda-files (my-agenda-files mode))))
+    (setq my-org-agenda-mode mode)
+    (setq org-agenda-files (my-org-agenda-files mode))))
 
-(defun my-toggle-agenda-mode ()
+(defun my-org-toggle-agenda-mode ()
   (interactive)
   (progn
-    (cond ((eq my-agenda-mode 'personal) (my-set-agenda-mode 'work))
-          ((eq my-agenda-mode 'work) (my-set-agenda-mode 'personal)))
+    (cond ((eq my-org-agenda-mode 'personal) (my-org-set-agenda-mode 'work))
+          ((eq my-org-agenda-mode 'work) (my-org-set-agenda-mode 'personal)))
     (when (derived-mode-p 'org-agenda-mode) (org-agenda-redo))))
 
 (defun my-copy-src-message (src)
@@ -82,7 +65,7 @@
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (org-todo-keywords '((sequence "TODO(t)" "ON HOLD(h)" "|" "DONE(d)" "CANCELED(c)")))
   :config
-  (my-set-agenda-mode 'personal)
+  (my-org-set-agenda-mode 'personal)
   (advice-add 'org-agenda-goto :after ; https://emacs.stackexchange.com/questions/17797/how-to-narrow-to-subtree-in-org-agenda-follow-mode
               (lambda (&rest args)
                 (org-narrow-to-subtree)))
@@ -90,7 +73,7 @@
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
    ("C-c l" . org-store-link)
-   ("C-c t" . my-toggle-agenda-mode)
+   ("C-c t" . my-org-toggle-agenda-mode)
    :map org-mode-map
    ("C-c y" . my-smart-copy)
    ([M-down-mouse-3] . 'mouse-set-point)
@@ -113,17 +96,17 @@
 (customize-set-variable 'org-capture-templates
   `(("j" "Journal")
     ("jt" "Todo" entry
-     (file+function ,(my-journal-path "personal-inbox") my-find-or-create-inbox-heading)
+     (file+function ,(my-org-journal-file-path "personal-inbox") my-find-or-create-inbox-heading)
      (file "~/config-emacs/capture-templates/todo.txt"))
     ("jn" "Note" entry
-     (file+function ,(my-journal-path "personal-inbox") my-find-or-create-inbox-heading)
+     (file+function ,(my-org-journal-file-path "personal-inbox") my-find-or-create-inbox-heading)
      (file "~/config-emacs/capture-templates/note.txt"))
     ("w" "Work journal")
     ("wt" "Todo" entry
-     (file+function ,(my-journal-path "work-inbox") my-find-or-create-inbox-heading)
+     (file+function ,(my-org-journal-file-path "work-inbox") my-find-or-create-inbox-heading)
      (file "~/config-emacs/capture-templates/todo.txt"))
     ("wn" "Note" entry
-     (file+function ,(my-journal-path "work-inbox") my-find-or-create-inbox-heading)
+     (file+function ,(my-org-journal-file-path "work-inbox") my-find-or-create-inbox-heading)
      (file "~/config-emacs/capture-templates/note.txt"))))
 
 (setq org-super-agenda-groups
