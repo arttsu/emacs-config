@@ -50,21 +50,21 @@
   (customize-set-variable 'notdeft-directories '("~/notes"))
   (global-set-key (kbd "C-c n d") 'notdeft))
 
-(customize-set-variable 'notdeft-notename-function 'my-notdeft-title-to-notename)
+;; (customize-set-variable 'notdeft-notename-function 'my-notdeft-title-to-notename)
 
-(defun my-notdeft-title-to-notename (str)
-  "Turn a title string STR to a note name string.
-Return that string, or nil if no usable name can be derived."
-  (when (string-match "^[^a-zA-Z0-9-_]+" str)
-    (setq str (replace-match "" t t str)))
-  (when (string-match "[^a-zA-Z0-9-_]+$" str)
-    (setq str (replace-match "" t t str)))
-  (while (string-match "[`'“”\"]" str)
-    (setq str (replace-match "" t t str)))
-  (while (string-match "[^a-zA-Z0-9-_]+" str)
-    (setq str (replace-match "_" t t str)))
-  (setq str (downcase str))
-  (and (not (string= "" str)) str))
+;; (defun my-notdeft-title-to-notename (str)
+;;   "Turn a title string STR to a note name string.
+;; Return that string, or nil if no usable name can be derived."
+;;   (when (string-match "^[^a-zA-Z0-9-_]+" str)
+;;     (setq str (replace-match "" t t str)))
+;;   (when (string-match "[^a-zA-Z0-9-_]+$" str)
+;;     (setq str (replace-match "" t t str)))
+;;   (while (string-match "[`'“”\"]" str)
+;;     (setq str (replace-match "" t t str)))
+;;   (while (string-match "[^a-zA-Z0-9-_]+" str)
+;;     (setq str (replace-match "_" t t str)))
+;;   (setq str (downcase str))
+;;   (and (not (string= "" str)) str))
 
 (use-package ox-jira)
 

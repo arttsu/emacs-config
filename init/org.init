@@ -1,8 +1,8 @@
 (straight-use-package 'org-plus-contrib)
 
 (setq MY-ORG-JOURNAL-PATH "~/journal")
-(setq MY-ORG-PERSONAL-AGENDA-FILES '("personal_inbox" "personal_projects"))
-(setq MY-ORG-WORK-AGENDA-FILES '("work_inbox" "work_projects"))
+(setq MY-ORG-PERSONAL-AGENDA-FILES '("personal-inbox" "personal-projects"))
+(setq MY-ORG-WORK-AGENDA-FILES '("work-inbox" "work-projects"))
 
 (defun my-org-journal-file-path (filename)
   (concat MY-ORG-JOURNAL-PATH "/" filename ".org"))
@@ -94,8 +94,8 @@
   (my-org-find-or-create-heading (format-time-string "* %Y W%V")))
 
 (defun my-org-find-inbox-file ()
-  (let ((filename (cond ((eq my-org-agenda-mode 'personal) "personal_inbox")
-                        ((eq my-org-agenda-mode 'work) "work_inbox"))))
+  (let ((filename (cond ((eq my-org-agenda-mode 'personal) "personal-inbox")
+                        ((eq my-org-agenda-mode 'work) "work-inbox"))))
     (set-buffer (org-capture-target-buffer (my-org-journal-file-path filename)))))
 
 (defun my-org-inbox-capture ()
@@ -122,6 +122,7 @@
                :order 1)
         (:auto-parent t
                       :order 10)))
+
 (use-package org-super-agenda
   :after org
   :hook
