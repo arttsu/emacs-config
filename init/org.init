@@ -1,5 +1,7 @@
 (straight-use-package 'org-plus-contrib)
 
+(require 'org-id)
+
 (setq MY-ORG-JOURNAL-PATH "~/journal")
 (setq MY-ORG-PERSONAL-AGENDA-FILES '("personal-inbox" "personal-projects"))
 (setq MY-ORG-WORK-AGENDA-FILES '("work-inbox" "work-projects"))
@@ -64,6 +66,7 @@
   (org-log-into-drawer t)
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (org-todo-keywords '((sequence "TODO(t)" "ON HOLD(h)" "|" "DONE(d)" "CANCELED(c)")))
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   :config
   (my-org-set-agenda-mode 'personal)
   (advice-add 'org-agenda-goto :after ; https://emacs.stackexchange.com/questions/17797/how-to-narrow-to-subtree-in-org-agenda-follow-mode
