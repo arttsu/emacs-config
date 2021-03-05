@@ -48,6 +48,7 @@
   (add-to-list 'load-path "~/notdeft")
   (require 'notdeft-autoloads)
   (customize-set-variable 'notdeft-directories '("~/notes"))
+  (customize-set-variable 'notdeft-xapian-program (expand-file-name "~/notdeft/xapian/notdeft-xapian"))
   (global-set-key (kbd "C-c n d") 'notdeft))
 
 ;; (customize-set-variable 'notdeft-notename-function 'my-notdeft-title-to-notename)
