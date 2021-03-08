@@ -46,6 +46,8 @@
 (global-set-key (kbd "M-[") 'switch-to-prev-buffer)
 (global-set-key (kbd "M-]") 'switch-to-next-buffer)
 
+(global-set-key (kbd "C-c q") 'delete-window)
+
 (provide 'init-emacs)
 
 ;;; init-emacs.el ends here
