@@ -69,6 +69,8 @@
 
 (use-package ox-jira)
 
+(use-package typescript-mode)
+
 (provide 'init)
 
 ;;; init.el ends here
