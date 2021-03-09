@@ -53,6 +53,9 @@
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . js-mode))
+(setq js-indent-level 2)
+
 (provide 'init-emacs)
 
 ;;; init-emacs.el ends here
