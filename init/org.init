@@ -2,8 +2,8 @@
 
 (require 'org-id)
 
-(setq MY-ORG-JOURNAL-PATH "~/journal")
-(setq MY-ORG-PERSONAL-AGENDA-FILES '("personal-inbox" "personal-projects"))
+(setq MY-ORG-JOURNAL-PATH "~/nb")
+(setq MY-ORG-PERSONAL-AGENDA-FILES '("inbox" "projects"))
 (setq MY-ORG-WORK-AGENDA-FILES '("work-inbox" "work-projects"))
 
 (defun my-org-journal-file-path (filename)
@@ -82,6 +82,13 @@
    ([M-down-mouse-3] . 'mouse-set-point)
    ([M-mouse-3] . 'my-smart-copy)))
 
+(use-package helm-org-rifle
+  :bind
+  (("C-c r" . helm-org-rifle)))
+
+(setq org-goto-interface 'outline-path-completion)
+(setq org-outline-path-complete-in-steps nil)
+
 (defun my-org-find-heading (heading)
   (re-search-forward (concat "^" heading "$") nil t))
 
@@ -97,7 +104,7 @@
   (my-org-find-or-create-heading (format-time-string "* %Y W%V")))
 
 (defun my-org-find-inbox-file ()
-  (let ((filename (cond ((eq my-org-agenda-mode 'personal) "personal-inbox")
+  (let ((filename (cond ((eq my-org-agenda-mode 'personal) "inbox")
                         ((eq my-org-agenda-mode 'work) "work-inbox"))))
     (set-buffer (org-capture-target-buffer (my-org-journal-file-path filename)))))
 
@@ -107,30 +114,29 @@
     (my-org-find-or-create-inbox-heading)))
 
 (customize-set-variable 'org-capture-templates
-  `(("j" "Journal")
-    ("jt" "Todo" entry
+  `(("t" "Todo" entry
      (function my-org-inbox-capture)
      (file "~/emacs_config/capture-templates/todo.txt"))
-    ("jn" "Note" entry
+    ("s" "Scheduled todo" entry
      (function my-org-inbox-capture)
-     (file "~/emacs_config/capture-templates/note.txt"))))
+     (file "~/emacs_config/capture-templates/scheduled.txt"))))
 
-(setq org-super-agenda-groups
-      '((:name "Schedule"
-               :time-grid t
-               :order 0)
-        (:name "High priority"
-               :and (:priority> "B" :file-path "personal-inbox.org")
-               :and (:priority> "B" :file-path "work-inbox.org")
-               :order 1)
-        (:auto-parent t
-                      :order 10)))
+;; (setq org-super-agenda-groups
+;;       '((:name "Schedule"
+;;                :time-grid t
+;;                :order 0)
+;;         (:name "High priority"
+;;                :and (:priority> "B" :file-path "personal-inbox.org")
+;;                :and (:priority> "B" :file-path "work-inbox.org")
+;;                :order 1)
+;;         (:auto-parent t
+;;                       :order 10)))
 
-(use-package org-super-agenda
-  :after org
-  :hook
-  (org-agenda-mode . org-super-agenda-mode)
-  :bind
-  (:map org-super-agenda-header-map
-        ("j" . org-agenda-next-line)
-        ("k" . org-agenda-previous-line)))
+;; (use-package org-super-agenda
+;;   :after org
+;;   :hook
+;;   (org-agenda-mode . org-super-agenda-mode)
+;;   :bind
+;;   (:map org-super-agenda-header-map
+;;         ("j" . org-agenda-next-line)
+;;         ("k" . org-agenda-previous-line)))

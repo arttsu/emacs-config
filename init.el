@@ -68,8 +68,11 @@
 ;;   (and (not (string= "" str)) str))
 
 (use-package ox-jira)
+(use-package ox-slack)
 
 (use-package typescript-mode)
+
+(use-package ledger-mode)
 
 (provide 'init)
 

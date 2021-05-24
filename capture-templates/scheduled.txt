@@ -1,0 +1,6 @@
+** TODO %^{Heading} %^g
+   SCHEDULED: %^t
+   :PROPERTIES:
+   :Created: %U
+   :END:
+   %?
