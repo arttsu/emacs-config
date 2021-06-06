@@ -121,6 +121,8 @@
      (function my-org-inbox-capture)
      (file "~/emacs_config/capture-templates/scheduled.txt"))))
 
+(setq org-todo-keyword-faces '(("ON HOLD" . (:foreground "blue" :background "grey" :weight thin))))
+
 ;; (setq org-super-agenda-groups
 ;;       '((:name "Schedule"
 ;;                :time-grid t
