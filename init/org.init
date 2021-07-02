@@ -66,7 +66,6 @@
   (org-log-into-drawer t)
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (org-todo-keywords '((sequence "TODO(t)" "ON HOLD(h)" "|" "DONE(d)" "CANCELED(c)")))
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   :config
   (my-org-set-agenda-mode 'personal)
   (advice-add 'org-agenda-goto :after ; https://emacs.stackexchange.com/questions/17797/how-to-narrow-to-subtree-in-org-agenda-follow-mode
@@ -88,6 +87,8 @@
 
 (setq org-goto-interface 'outline-path-completion)
 (setq org-outline-path-complete-in-steps nil)
+(setq org-link-file-path-type 'adaptive)
+(setq org-link-context-for-files nil)
 
 (defun my-org-find-heading (heading)
   (re-search-forward (concat "^" heading "$") nil t))
@@ -114,12 +115,15 @@
     (my-org-find-or-create-inbox-heading)))
 
 (customize-set-variable 'org-capture-templates
-  `(("t" "Todo" entry
-     (function my-org-inbox-capture)
-     (file "~/emacs_config/capture-templates/todo.txt"))
-    ("s" "Scheduled todo" entry
-     (function my-org-inbox-capture)
-     (file "~/emacs_config/capture-templates/scheduled.txt"))))
+                        `(("n" "Note" entry
+                           (function my-org-inbox-capture)
+                           (file "~/emacs_config/capture-templates/note.txt"))
+                          ("t" "Todo" entry
+                           (function my-org-inbox-capture)
+                           (file "~/emacs_config/capture-templates/todo.txt"))
+                          ("s" "Scheduled todo" entry
+                           (function my-org-inbox-capture)
+                           (file "~/emacs_config/capture-templates/scheduled.txt"))))
 
 (setq org-todo-keyword-faces '(("ON HOLD" . (:foreground "blue" :background "grey" :weight thin))))
 
